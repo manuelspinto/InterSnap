@@ -1,0 +1,558 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+    {{super()}}
+
+    <link rel="stylesheet"
+      href="{{url_for('.static', filename='base.css')}}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker.css">
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
+    <script src="https://cdn.rawgit.com/markrcote/flot-axislabels/master/jquery.flot.axislabels.js"></script>
+    <script src="https://cdn.rawgit.com/krzysu/flot.tooltip/master/js/jquery.flot.tooltip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript">
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+    {% if request.path == "/addspace/query" %}
+        <script type="text/javascript">
+                function plot(data) {
+
+                $.plot("#placeholder", [
+                    data.pdata
+                ], {
+                    series: {
+                        lines: { show: false},
+                        bars: {show: true, barWidth: 0.5, align:'center'},
+                        points: { show: false }
+                    },
+                    grid: {
+                        borderColor: 'none',
+                        hoverable: true
+                    },
+                    xaxis: {
+                        axisLabel: "Mask",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10,
+
+                        ticks: data.pdata.length,
+                        tickDecimals: 0
+                    },
+                    yaxis: {
+                        axisLabel: "Number of announced prefixes",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10,
+
+                        min: 0,
+                        //max: 350000,
+                        tickDecimals: 0
+                    },
+                    tooltip: {
+                        show: true,
+                        content: "%y",
+                        shifts: {
+                            x: -60,
+                            y: 25
+                        }
+                     }
+                });
+            }
+
+
+
+                $(function () {
+                    $('#datepicker').datepicker({
+                        format: 'dd/mm/yyyy',
+                        endDate: '+1d',
+                        orientation: 'top',
+                        autoclose: 'true'
+                    });
+                     $("#datepicker").datepicker('setDate', new Date());
+
+                    $('#loading-but').hide();
+
+                    $('#ipver').find('button').click( function(e) {
+
+                        $('#ipver').find('.btn-primary').addClass('btn-default');
+                        $('#ipver').find('.btn-primary').removeClass('btn-primary');
+
+
+                        $(this).removeClass('.btn-default');
+                        $(this).addClass('btn-primary');
+                    });
+
+
+                    $('#adds-qbut').click( function(e) {
+                        $('placeholder').hide();
+                        $('#loading-but').show();
+                        var val = $('#startdate').val();
+
+                        var split = val.split('/');
+                        var day = split[0];
+                        var month = split[1];
+                        var year = split[2];
+
+
+
+                        $.getJSON($SCRIPT_ROOT + "/_addspaceq", {
+
+                            day: day,
+                            month: month,
+                            year: year,
+                            ipver: $('#ipver').find(".btn-primary").attr('id')
+
+                        }, function(data) {
+                            $('#loading-but').hide();
+                            $('placeholder').show();
+                            plot(data)
+                        });
+                        return false;
+                    });
+
+
+                });
+
+        </script>
+    {% endif %}
+
+    {% if request.path == "/pxtype/evolution" %}
+        <script type="text/javascript">
+
+                function show_data() {
+
+                    $.getJSON($SCRIPT_ROOT + "/_pxtypevo", {
+                        ipver: $('#ipver').find(".btn-primary").attr('id')
+                    }, function(data) {
+                        $('#loading-but').hide();
+                        plot(data)
+                    });
+                    return false;
+                }
+
+                function plot(data) {
+
+                    $.plot("#placeholder", [
+                            { label: "TOP", data: data.top },
+                            { label: "LON", data: data.lon },
+                            { label: "DEA", data: data.dea },
+                            { label: "DEL", data: data.dele }
+                    ], {
+                        series: {
+                            lines: { show: true},
+                            points: { show: true }
+                        },
+                        grid: {
+                            borderColor: 'none',
+                            hoverable: true
+                        },
+                        xaxis: {
+                            axisLabel: "years",
+                            axisLabelUseCanvas: true,
+                            axisLabelFontSizePixels: 12,
+                            axisLabelFontFamily: 'Verdana, Arial',
+                            axisLabelPadding: 10,
+
+                            //ticks: data.pdata.length,
+                            tickDecimals: 0
+                        },
+                        yaxis: {
+                            axisLabel: "% of announced prefixes",
+                            axisLabelUseCanvas: true,
+                            axisLabelFontSizePixels: 12,
+                            axisLabelFontFamily: 'Verdana, Arial',
+                            axisLabelPadding: 10,
+
+                            min: 0,
+                            //max: 350000,
+                            tickDecimals: 0
+                        },
+                        tooltip: {
+                            show: true,
+                            content: "%y",
+                            shifts: {
+                                x: -60,
+                                y: 25
+                            }
+                         },
+                        legend:{
+                            position: "nw"
+                        }
+                    });
+                }
+
+                $(function () {
+                    $('#loading-but').show();
+
+                    $('#ipver').find('button').click( function(e) {
+
+                        $('#ipver').find('.btn-primary').addClass('btn-default');
+                        $('#ipver').find('.btn-primary').removeClass('btn-primary');
+
+
+                        $(this).removeClass('.btn-default');
+                        $(this).addClass('btn-primary');
+
+                        show_data();
+                    });
+
+                    show_data();
+
+
+                });
+
+        </script>
+    {% endif %}
+
+
+    {% if request.path == "/addspace" %}
+        <script type=text/javascript>
+            function show_data() {
+
+                var sh = $('#source-holder');
+                var ph = $('#placeholder');
+                var dh = $('#data-holder');
+                var lb = $('#loading-but');
+
+                ph.hide();
+                dh.hide();
+                sh.hide();
+                lb.show();
+
+                var type = $('#data-menu').find('.active').attr('id');
+
+                var year =   $('#years-list').find('.active').attr('id');
+                var ipver = $('#ip-version').find(".active").attr('id');
+
+                if (type == "source"){
+                    $.getJSON($SCRIPT_ROOT + "/_source", {
+                        year: year,
+                        ipver: ipver
+                    }, function(data) {
+                        sh.show();
+                        print_source(data)
+                    });
+                }
+
+                if (type == "chart"){
+                    $.getJSON($SCRIPT_ROOT + "/_space", {
+                        year: year,
+                        ipver: ipver
+                    }, function(data) {
+                        ph.show();
+                        plot(data)
+                    });
+                }
+
+                if (type == "data"){
+                    $.getJSON($SCRIPT_ROOT + "/_data", {
+                        year: year,
+                        ipver: ipver
+                    }, function(data) {
+                        dh.show();
+                        print_data(data);
+                        $('.added').remove();
+                        $.each(data.counts, function (index, element) {
+                            if ( (index >=7 && index <24 && ipver == 'ipv4') ||
+                                    (ipver == 'ipv6' && index >=15 && index <48 ))
+                                $('#counts')
+                                        .append($('<tr class="added">')
+                                                .append($('<td>').text(index + 1))
+                                                .append($('<td>').text(element))
+                                        )
+                        });
+
+                    });
+
+                }
+               lb.hide();
+               return false;
+
+            }
+
+            function plot(data) {
+
+                $.plot("#placeholder", [
+                    data.pdata
+                ], {
+                    series: {
+                        lines: { show: false},
+                        bars: {show: true, barWidth: 0.5, align:'center'},
+                        points: { show: false }
+                    },
+                    grid: {
+                        borderColor: 'none',
+                        hoverable: true
+                    },
+                    xaxis: {
+                        axisLabel: "Mask",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10,
+
+                        ticks: data.pdata.length,
+                        tickDecimals: 0
+                    },
+                    yaxis: {
+                        axisLabel: "Number of announced prefixes",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10,
+
+                        min: 0,
+                        //max: 350000,
+                        tickDecimals: 0
+                    },
+                    tooltip: {
+                        show: true,
+                        content: "%y",
+                        shifts: {
+                            x: -60,
+                            y: 25
+                        }
+                     }
+                });
+            }
+
+            function print_source(data) {
+                $('#file').text(data.file);
+                $('#link').text(data.link);
+            }
+
+            function print_data(data) {
+                $('#tot').text(data.tot);
+                $('#dis').text(data.dis);
+            }
+
+
+
+            $(function() {
+
+                $('#source-holder').hide();
+                $('#data-holder').hide();
+
+
+                show_data();
+
+                $('#ip-version').find('li').click( function(e) {
+                    $('#ip-version').find('li').removeClass('active');
+                    $(this).addClass('active');
+
+                    show_data();
+                });
+
+                $('#data-menu').find('a').click( function(e) {
+                    $('#data-menu').find('.active').removeClass('active');
+                    $(this).addClass('active');
+
+                    show_data();
+
+                });
+
+                $('#years-list').find('a').click( function(e) {
+                    var y =  $(this).attr('id');
+                    var a =  $('#years-list').find('.active').attr('id');
+                    if (a == y)
+                        return false;
+
+                    $('#date').text("01 - Aug - " + y);
+
+                    $('#years-list').find('a').removeClass('active');
+                    $(this).addClass('active');
+
+                    show_data();
+
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% if request.path == "/pxtype" %}
+        <script type=text/javascript>
+            function show_data() {
+
+                var sh = $('#source-holder');
+                var ph = $('#placeholder');
+                var dh = $('#data-holder');
+                var lb = $('#loading-but');
+
+                ph.hide();
+                dh.hide();
+                sh.hide();
+                lb.show();
+
+                var type = $('#data-menu').find('.active').attr('id');
+
+                var year =   $('#years-list').find('.active').attr('id');
+                var ipver = $('#ip-version').find(".active").attr('id');
+
+                if (type == "source"){
+                    $.getJSON($SCRIPT_ROOT + "/_source", {
+                        year: year,
+                        ipver: ipver
+                    }, function(data) {
+                        sh.show();
+                        print_source_type(data)
+                    });
+                }
+
+                if (type == "chart"){
+                    $.getJSON($SCRIPT_ROOT + "/_chart_type", {
+                        year: year,
+                        ipver: ipver
+                    }, function(data) {
+                        ph.show();
+                        plot_type(data)
+                    });
+                }
+
+                if (type == "data"){
+                    $.getJSON($SCRIPT_ROOT + "/_data_type", {
+                        year: year,
+                        ipver: ipver
+                    }, function(data) {
+                        dh.show();
+                        print_data_type(data);
+                    });
+
+                }
+               lb.hide();
+               return false;
+
+            }
+
+            function plot_type(data) {
+
+                $.plot("#placeholder", [
+                    data.pdata
+                ], {
+                    series: {
+                        lines: { show: false},
+                        bars: {show: true, barWidth: 0.5, align:'center'},
+                        points: { show: false }
+                    },
+                    grid: {
+                        borderColor: 'none',
+                        hoverable: true
+                    },
+                    xaxis: {
+                        axisLabel: "Prefix type",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10,
+
+                        ticks: [[0,'Top'],[1,'Lonely'],[2,'Delegated'],[3,'Deaggregated']]
+                    },
+                    yaxis: {
+                        axisLabel: "% of announced prefixes",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10,
+
+                        min: 0,
+                        max: 100
+                    },
+                    tooltip: {
+                        show: true,
+                        content: "%y",
+                        shifts: {
+                            x: -60,
+                            y: 25
+                        }
+                     }
+                });
+            }
+
+            function print_source_type(data) {
+                $('#file').text(data.file);
+                $('#link').text(data.link);
+            }
+
+            function print_data_type(data) {
+                $('#tot').text(data.tot);
+                $('#dis').text(data.dis);
+                $('#top').text(data.top);
+                $('#del').text(data.dele);
+                $('#lon').text(data.lon);
+                $('#dea').text(data.dea);
+            }
+
+
+
+            $(function() {
+
+                $('#source-holder').hide();
+                $('#data-holder').hide();
+
+
+                show_data();
+
+                $('#ip-version').find('li').click( function(e) {
+                    $('#ip-version').find('li').removeClass('active');
+                    $(this).addClass('active');
+
+                    show_data();
+                });
+
+                $('#data-menu').find('a').click( function(e) {
+                    $('#data-menu').find('.active').removeClass('active');
+                    $(this).addClass('active');
+
+                    show_data();
+
+                });
+
+                $('#years-list').find('a').click( function(e) {
+                    var y =  $(this).attr('id');
+                    var a =  $('#years-list').find('.active').attr('id');
+                    if (a == y)
+                        return false;
+
+                    $('#date').text("01 - Aug - " + y);
+
+                    $('#years-list').find('a').removeClass('active');
+                    $(this).addClass('active');
+
+                    show_data();
+
+                });
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}
+
+{% block title %}InterSnap{% endblock %}
+
+{% block navbar %}
+    <nav id="custom-bootstrap-menu" class="navbar navbar-inverse">
+	  	<div class="container-fluid">
+			<div class="navbar-header">
+		      <a class="navbar-brand" href="/">InterSnap</a>
+	    	</div>
+	        <ul class="nav navbar-nav">
+	          <li {% if (request.path == "/addspace" or request.path == "/addspace/query") %}class="active"{% endif %}><a href="/addspace">Address Space</a></li>
+	          <li {% if (request.path == "/pxtype"   or request.path == "/pxtype/evolution") %}class="active"{% endif %}><a href="/pxtype">Prefix Type</a></li>
+              <li><a href="#">Network Statistics</a></li>
+	        </ul>
+	        <ul class="nav navbar-nav navbar-right">
+	          <li><a href="#">Info</a></li>
+              <li><a href="#">Contacts</a></li>
+	        </ul>
+		</div>
+	</nav>
+{% endblock %}

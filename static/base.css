@@ -1,0 +1,125 @@
+
+.container-body {
+    width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.container-fluid {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+#snap-title{
+    text-align: left;
+}
+
+.breadcrumb {
+    text-align: left;
+}
+
+.source-subtitle {
+    padding-top: 0px;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+.nav-pills > li {
+    margin-top: 10px;
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-pills {
+    text-align:center;
+}
+
+#placeholder{
+     width: 50%;
+     margin: 0 auto;
+}
+
+#placeholder.loading {
+    overflow: hidden;
+}
+
+#date-query {
+    padding-top: 5px;
+    font-size: medium ;
+}
+
+#right-col{
+    padding-top: 100px;
+}
+
+#query-container {
+    padding-top: 5px;
+    padding-bottom: 40px;
+}
+
+#evo-container {
+    padding-top: 5px;
+    padding-bottom: 40px;
+}
+
+.fullscreen_bg {
+    position: fixed;
+    top: 52px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-size: cover;
+    background-position: 50% 90%;
+    background-image: url('/static/network.jpg');
+    /*background-image: url('http://seekattle.herokuapp.com/img/vaca_acores.jpg');*/
+}
+
+#is-title {
+    text-align: center;
+    color: black;
+}
+
+#title-container{
+  margin-top: 30px;
+  width: 400px;
+
+  position: relative;
+  text-align: center;
+  background: rgba(232,232,232, 0.9);
+
+  border-radius: 15px;
+  border-color:#d2d2d2;
+  border-width: 5px;
+  box-shadow:0 1px 0 #cfcfcf;
+
+}
+
+#popup-container{
+  margin-top: 200px;
+  width: 350px;
+
+  position: relative;
+  text-align: center;
+  background: rgba(130, 148, 187, 0.9);
+
+  border-radius: 15px;
+  border-color:#d2d2d2;
+  border-width: 5px;
+  box-shadow:0 1px 0 #cfcfcf;
+
+}

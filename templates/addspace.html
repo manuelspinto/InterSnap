@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="container-body" id="spacebg">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li class="active">Address Space</li>
+          <li><a href="/addspace/query">Query</a></li>
+        </ol>
+
+        <div class="row">
+          <div class="col-sm-2" id="left-col">
+
+              <div id ="query-container">
+                <a href="addspace/query" class="btn btn-lg btn-danger" id="addspace-qbut">Query</a>
+
+              </div>
+
+              <div class="list-group" id="years-list">
+
+                  {% for year in years %}
+                     {% if year == 2015 %}
+                        <a class="list-group-item active" id="{{ year }}">
+                     {% else %}
+                         <a class="list-group-item" id="{{ year }}">
+                     {% endif %}
+                  {{ year }}</a>
+                {% endfor %}
+
+
+              </div>
+
+
+
+
+          </div>
+
+          <div class="col-sm-8">
+
+                <ul class="nav nav-pills" id="ip-version">
+                  <li role="presentation" class="active" id ="ipv4"><a>IPv4</a></li>
+                  <li role="presentation" id = "ipv6"><a >IPv6</a></li>
+                </ul>
+
+                <hr>
+
+                <h3 id="date">01 - Aug - 2015 </h3>
+
+                <button class="btn btn-lg btn-warning" id="loading-but"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></button>
+
+                <div id="placeholder" style="width:500px;height:350px"></div>
+
+                <div id="data-holder">
+
+                    <h3> Prefixes </h3>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Number of Prefixes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                            <td>Total</td>
+                            <td id="tot"></td>
+                          </tr>
+                          <tr>
+                            <td>Discarded</td>
+                            <td id="dis"></td>
+                          </tr>
+                      </tbody>
+                    </table>
+
+
+                    <h3> Mask counts </h3>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Mask</th>
+                          <th>Number of Prefixes</th>
+                        </tr>
+                      </thead>
+                      <tbody id="counts">
+
+                      </tbody>
+                    </table>
+
+                </div>
+
+                <div id="source-holder">
+
+                    <table class="table table-striped">
+                        <tbody>
+                          <tr>
+                            <td>File</td>
+                            <td id="file"></td>
+                          </tr>
+                          <tr>
+                            <td>Link</td>
+                            <td id="link"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                </div>
+
+
+
+
+          </div>
+
+          <div class="col-sm-2" id="right-col">
+              <div class="list-group" id="data-menu">
+                  <a class="list-group-item active"  id="chart">
+                    Chart
+                  </a>
+                  <a class="list-group-item" id="source">
+                    Source
+                  </a>
+                  <a class="list-group-item" id ="data">
+                      Data
+                  </a>
+              </div>
+          </div>
+        </div>
+
+
+
+    </div>
+
+{% endblock %}

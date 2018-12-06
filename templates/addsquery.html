@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="container-body">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li><a href="/addspace">Address Space</a></li>
+          <li class="active">Query</li>
+        </ol>
+        <hr>
+
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-3'>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label" id="date-query"> Date: </label>
+                            <div class='input-group date' id='datepicker'>
+
+                                <input type='text' class="form-control" id="startdate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+
+
+
+
+                            </div>
+
+
+                    </div>
+                </div>
+
+                <div class='col-sm-2'>
+
+                    <div class="btn-group" role="group" aria-label="..." id="ipver">
+                      <button type="button" class="btn btn-primary" id="ipv4">IPv4</button>
+                      <button type="button" class="btn btn-default" id="ipv6">IPv6</button>
+                    </div>
+
+                </div>
+
+                <div class='col-sm-2'>
+                    <button type="button" class="btn btn-danger" id="adds-qbut">
+                        QUERY
+                      </button>
+                </div>
+
+            </div>
+        </div>
+
+        <hr>
+
+
+        <div id="placeholder" style="width:500px;height:350px"></div>
+
+        <button class="btn btn-lg btn-warning" id="loading-but"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></button>
+
+
+    </div>
+
+{% endblock %}

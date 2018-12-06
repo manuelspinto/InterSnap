@@ -1,0 +1,1 @@
+web: gunicorn intersnap:app --log-file=-
